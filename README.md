@@ -1,4 +1,4 @@
-# EC500_GTP_For_WSI  
+# EC500: GTP for WSI  
 
 In this EC500 team project, we will fine-tune a Graph Transformer for Digital Pathology on a Whole-Slide Images (WSI) dataset for Prostate Cancer. 
 
