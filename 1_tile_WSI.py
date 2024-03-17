@@ -632,7 +632,6 @@ class DeepZoomStaticTiler(object):
         self._dzi_data[self._url_for(associated)] = tiler.get_dzi()
 
 
-
     def _url_for(self, associated):
         if associated is None:
             base = VIEWER_SLIDE_NAME
@@ -684,7 +683,6 @@ class DeepZoomStaticTiler(object):
         for _i in range(self._workers):
             self._queue.put(None)
         self._queue.join()
-
 
 
 def ImgWorker(queue):
@@ -798,7 +796,6 @@ if __name__ == '__main__':
 		parser.error("ERROR: NO NORMALIZATION APPLIED: input vector does not have the right format")
         #if ss != '':
         #    if os.path.isdir(opts.xmlfile):
-            
 
 	# Initialization
 	# imgExample = "/ifs/home/coudrn01/NN/Lung/RawImages/*/*svs"
@@ -953,7 +950,6 @@ if __name__ == '__main__':
 					except Exception as e:
 						print("Failed to process file %s, error: %s" % (filename, sys.exc_info()[0]))
 						print(e)
-
 
 				else:
 					print("No xml file found for slide %s.svs (expected: %s). Directory or xml file does not exist" %  (opts.basenameJPG, xmldir) )
