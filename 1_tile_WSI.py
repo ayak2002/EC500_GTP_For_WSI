@@ -16,7 +16,7 @@
     Output:
         Tiled patches in the .dzi format
 
-	Caution:
+    Caution:
         Overload - there may be memory issues if the node is shared with other jobs
 """
 
