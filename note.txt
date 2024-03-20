@@ -1,4 +1,4 @@
-Try to make a run.py as an entrance for each stage. 
+Try to make a run.py as an entry for each stage. 
 
 * 1: Tile WSI
 
@@ -8,6 +8,8 @@ Set -M to 1
 
 Set batch_size to 32 in config.yaml
     We have 398 patches of the minisample. 
-Set input_shape to (512,512,3)
-
+Set weight_decay to 10e-5
+Throw apex away in simclr.py since it is not used
+Discard the 20x magnification in run.py
+    We haven't made use of magnification in stage 1, though I have no idea whether they are related. 
 

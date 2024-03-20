@@ -1,11 +1,14 @@
 """
     Usage:
+        It's an entry of stage 2: training a patch feature extractor. Just modify the paths 
+        accordingly and run the code.
 
     Input: 
-        Patches
+        All the patches from different WSIs
     Output:
-        
+        A feature extractor model, which will be in feature_extractor/runs
 """
+
 
 import os
 import csv
@@ -56,7 +59,7 @@ def write_paths_to_csv(root_dir, csv_dir, script_dir, origin_dir):
 
 
 patches_dir = "/Users/paul/Desktop/EC500_GTP_For_WSI/patch"
-csv_dir = "/Users/paul/Desktop/EC500_GTP_For_WSI/2_feature_extractor/all_patches.csv"
-script_dir = "/Users/paul/Desktop/EC500_GTP_For_WSI/2_feature_extractor"
+csv_dir = "/Users/paul/Desktop/EC500_GTP_For_WSI/feature_extractor/all_patches.csv"
+script_dir = "/Users/paul/Desktop/EC500_GTP_For_WSI/feature_extractor"
 origin_dir = "/Users/paul/Desktop/EC500_GTP_For_WSI"
 write_paths_to_csv(patches_dir, csv_dir, script_dir, origin_dir)
