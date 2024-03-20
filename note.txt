@@ -1,4 +1,7 @@
-* Tile WSI
+Try to make a run.py as an entrance for each stage. 
+
+* 1: Tile WSI
 
 Set -M to 1
 
+* 2: Train patch feature extractor
