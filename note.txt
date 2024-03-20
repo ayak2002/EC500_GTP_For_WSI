@@ -13,3 +13,8 @@ Throw apex away in simclr.py since it is not used
 Discard the 20x magnification in run.py
     We haven't made use of magnification in stage 1, though I have no idea whether they are related. 
 
+* 3: Construct graphs
+
+Set :arg batch_size to 16 in build_graphs.py, half of the value we used before
+Set :arg magnification to 5x
+    Honestly I'm worried about the overall influence of magnification from different stages. 
