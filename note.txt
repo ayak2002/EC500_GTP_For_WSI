@@ -1,10 +1,10 @@
 Try to make a run.py as an entry for each stage. 
 
-* 1: Tile WSI
+* 1: Tile WSIs
 
 Set -M to 1
 
-* 2: Train patch feature extractor
+* 2: Train a patch feature extractor
 
 Set batch_size to 32 in config.yaml
     We have 398 patches of the minisample. 
