@@ -1,15 +1,3 @@
-"""
-    Usage:
-        python run.py
-
-        Add the folder path containing the patches to all_patches.csv first. 
-
-    Input: 
-        Patches
-    Output:
-        ???
-"""
-
 from simclr import SimCLR
 import yaml
 from data_aug.dataset_wrapper import DataSetWrapper

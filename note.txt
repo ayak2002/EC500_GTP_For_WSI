@@ -5,3 +5,8 @@ Try to make a run.py as an entrance for each stage.
 Set -M to 1
 
 * 2: Train patch feature extractor
+
+Set batch_size to 8 in config.yaml
+    We need more patches of a WSI. 
+
+

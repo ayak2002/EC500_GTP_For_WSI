@@ -7,15 +7,15 @@ import os
 import shutil
 import sys
 
-apex_support = False
-try:
-    sys.path.append('./apex')
-    from apex import amp
+apex_support = False    # temporarily no use
+# try:
+#     sys.path.append('./apex')
+#     from apex import amp
 
-    apex_support = True
-except:
-    print("Please install apex for mixed precision training from: https://github.com/NVIDIA/apex")
-    apex_support = False
+#     apex_support = True
+# except:
+#     print("Please install apex for mixed precision training from: https://github.com/NVIDIA/apex")
+#     apex_support = False
 
 import numpy as np
 

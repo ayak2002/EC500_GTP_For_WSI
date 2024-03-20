@@ -12,7 +12,7 @@ np.random.seed(0)
 
 class Dataset():
     def __init__(self, csv_file, transform=None):
-        self.files_list = pd.read_csv(csv_file)
+        self.files_list = pd.read_csv(csv_file, header=None)
         self.transform = transform
     def __len__(self):
         return len(self.files_list)
@@ -42,6 +42,7 @@ class DataSetWrapper(object):
     def get_data_loaders(self):
         data_augment = self._get_simclr_pipeline_transform()
         train_dataset = Dataset(csv_file='all_patches.csv', transform=SimCLRDataTransform(data_augment))
+        print(f"* dataset_wrapper.py: {len(train_dataset)}")
         train_loader, valid_loader = self.get_train_validation_data_loaders(train_dataset)
         return train_loader, valid_loader
 
