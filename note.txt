@@ -16,5 +16,9 @@ Discard the 20x magnification in run.py
 * 3: Construct graphs
 
 Set :arg batch_size to 16 in build_graphs.py, half of the value we used before
-Set :arg magnification to 5x
+Set :arg magnification to 1x
     Honestly I'm worried about the overall influence of magnification from different stages. 
+    To deal with the file reading issues several lines of code have been added. Please review the new if branch at line 103 to ensure you understand the changes in the path. 
+Set :arg num_classes to 512 to match the size from the checkpoint
+    Honestly I don't know why they set it to 512 before.
+Add CPU ver in build_graphs.py by changing .cuda() and .load()

@@ -75,7 +75,9 @@ def adj_matrix(csv_file_path, output):
                 adj_s[j][i] = 1
 
     adj_s = torch.from_numpy(adj_s)
-    adj_s = adj_s.cuda()
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    adj_s = adj_s.to(device)
+    # adj_s = adj_s.cuda()
 
     return adj_s
 
@@ -89,6 +91,7 @@ def bag_dataset(args, csv_file_path):
 
 def compute_feats(args, bags_list, i_classifier, save_path=None, whole_slide_path=None):
     num_bags = len(bags_list)
+    # print(f"* build_graphs.py: {bags_list}")
     Tensor = torch.FloatTensor
     for i in range(0, num_bags):
         feats_list = []
@@ -97,6 +100,10 @@ def compute_feats(args, bags_list, i_classifier, save_path=None, whole_slide_pat
             file_name = bags_list[i].split('/')[-3].split('_')[0]
         if args.magnification == '5x' or args.magnification == '10x':
             csv_file_path = glob.glob(os.path.join(bags_list[i], '*.jpg'))
+        if args.magnification == '1x':
+            subfolder_path = os.path.join(bags_list[i], '1.0')
+            csv_file_path = glob.glob(os.path.join(subfolder_path, '*.jpeg'))
+            file_name = bags_list[i].split('/')[-2].split('_')[0]
 
         dataloader, bag_size = bag_dataset(args, csv_file_path)
         print('{} files to be processed: {}'.format(len(csv_file_path), file_name))
@@ -104,11 +111,13 @@ def compute_feats(args, bags_list, i_classifier, save_path=None, whole_slide_pat
         if os.path.isdir(os.path.join(save_path, 'simclr_files', file_name)) or len(csv_file_path) < 1:
             print('alreday exists')
             continue
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         with torch.no_grad():
             for iteration, batch in enumerate(dataloader):
-                patches = batch['input'].float().cuda() 
+                patches = batch['input'].float().to(device)
+                # patches = batch['input'].float().cuda() 
                 feats, classes = i_classifier(patches)
-                #feats = feats.cpu().numpy()
+                # feats = feats.cpu().numpy()
                 feats_list.extend(feats)
         
         os.makedirs(os.path.join(save_path, 'simclr_files', file_name), exist_ok=True)
@@ -116,7 +125,8 @@ def compute_feats(args, bags_list, i_classifier, save_path=None, whole_slide_pat
         txt_file = open(os.path.join(save_path, 'simclr_files', file_name, 'c_idx.txt'), "w+")
         save_coords(txt_file, csv_file_path)
         # save node features
-        output = torch.stack(feats_list, dim=0).cuda()
+        # output = torch.stack(feats_list, dim=0).cuda()
+        output = torch.stack(feats_list, dim=0).to(device)
         torch.save(output, os.path.join(save_path, 'simclr_files', file_name, 'features.pt'))
         # save adjacent matrix
         adj_s = adj_matrix(csv_file_path, output)
@@ -127,7 +137,8 @@ def compute_feats(args, bags_list, i_classifier, save_path=None, whole_slide_pat
 
 def main():
     parser = argparse.ArgumentParser(description='Compute patch features from SimCLR embedder')
-    parser.add_argument('--num_classes', default=2, type=int, help='Number of output classes')
+    # parser.add_argument('--num_classes', default=2, type=int, help='Number of output classes')
+    parser.add_argument('--num_classes', default=512, type=int, help='Number of output classes')
     parser.add_argument('--num_feats', default=512, type=int, help='Feature size')
     # parser.add_argument('--batch_size', default=128, type=int, help='Batch size of dataloader')
     parser.add_argument('--batch_size', default=16, type=int, help='Batch size of dataloader')
@@ -135,7 +146,7 @@ def main():
     parser.add_argument('--dataset', default=None, type=str, help='path to patches')
     parser.add_argument('--backbone', default='resnet18', type=str, help='Embedder backbone')
     # parser.add_argument('--magnification', default='20x', type=str, help='Magnification to compute features')
-    parser.add_argument('--magnification', default='5x', type=str, help='Magnification to compute features')
+    parser.add_argument('--magnification', default='1x', type=str, help='Magnification to compute features')
     parser.add_argument('--weights', default=None, type=str, help='path to the pretrained weights')
     parser.add_argument('--output', default=None, type=str, help='path to the output graph folder')
     args = parser.parse_args()
@@ -154,14 +165,20 @@ def main():
         num_feats = 2048
     for param in resnet.parameters():
         param.requires_grad = False
+
     resnet.fc = nn.Identity()
-    i_classifier = cl.IClassifier(resnet, num_feats, output_class=args.num_classes).cuda()
-    
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    i_classifier = cl.IClassifier(resnet, num_feats, output_class=args.num_classes).to(device)
+    # i_classifier = cl.IClassifier(resnet, num_feats, output_class=args.num_classes).cuda()
+
     # load feature extractor
     if args.weights is None:
         print('No feature extractor')
         return
-    state_dict_weights = torch.load(args.weights)
+    if device == 'cuda':
+        state_dict_weights = torch.load(args.weights)
+    else:
+        state_dict_weights = torch.load(args.weights, map_location='cpu')
     state_dict_init = i_classifier.state_dict()
     new_state_dict = OrderedDict()
     for (k, v), (k_0, v_0) in zip(state_dict_weights.items(), state_dict_init.items()):
