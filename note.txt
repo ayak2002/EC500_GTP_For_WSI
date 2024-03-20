@@ -6,7 +6,8 @@ Set -M to 1
 
 * 2: Train patch feature extractor
 
-Set batch_size to 8 in config.yaml
-    We need more patches of a WSI. 
+Set batch_size to 32 in config.yaml
+    We have 398 patches of the minisample. 
+Set input_shape to (512,512,3)
 
 
