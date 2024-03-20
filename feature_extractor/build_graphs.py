@@ -13,6 +13,8 @@ import numpy as np
 from PIL import Image
 from collections import OrderedDict
 
+Image.MAX_IMAGE_PIXELS = None
+
 class ToPIL(object):
     def __call__(self, sample):
         img = sample
@@ -84,7 +86,6 @@ def bag_dataset(args, csv_file_path):
                                     ]))
     dataloader = DataLoader(transformed_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, drop_last=False)
     return dataloader, len(transformed_dataset)
-
 
 def compute_feats(args, bags_list, i_classifier, save_path=None, whole_slide_path=None):
     num_bags = len(bags_list)
