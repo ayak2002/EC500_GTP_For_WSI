@@ -12,7 +12,7 @@
     Input: 
         All the patches and the trained feature extractor
     Output:
-        ...
+        Graph embeddings
 """
 
 import subprocess
