@@ -22,3 +22,8 @@ Set :arg magnification to 1x
 Set :arg num_classes to 512 to match the size from the checkpoint
     Honestly I don't know why they set it to 512 before.
 Add CPU ver in build_graphs.py by changing .cuda() and .load()
+
+* 4: Train and test the graph transformer
+
+Add ISUP grade mapping in utils/dataset.py
+Change both graphs and labels reading logic in utils/dataset.py

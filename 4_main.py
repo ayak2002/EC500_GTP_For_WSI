@@ -12,8 +12,6 @@ from tensorboardX import SummaryWriter
 from helper import Trainer, Evaluator, collate
 from option import Options
 
-# from utils.saliency_maps import *
-
 from models.GraphTransformer import Classifier
 from models.weight_init import weight_init
 
@@ -46,6 +44,7 @@ if train:
     dataset_train = GraphDataset(os.path.join(data_path, ""), ids_train)
     dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=True, pin_memory=True, drop_last=True)
     total_train_num = len(dataloader_train) * batch_size
+    print(f"* 4_main.py: total_train_num is {total_train_num}")
 
 ids_val = open(args.val_set).readlines()
 dataset_val = GraphDataset(os.path.join(data_path, ""), ids_val)
@@ -53,7 +52,7 @@ dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=bat
 total_val_num = len(dataloader_val) * batch_size
     
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-##### creating models #############
+##### Creating models
 print("creating models......")
 
 num_epochs = args.num_epochs

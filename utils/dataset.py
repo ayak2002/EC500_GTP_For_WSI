@@ -50,56 +50,62 @@ class GraphDataset(data.Dataset):
         self.root = root
         self.ids = ids
         #self.target_patch_size = target_patch_size
-        self.classdict = {'normal': 0, 'luad': 1, 'lscc': 2}        #
-        #self.classdict = {'normal': 0, 'tumor': 1}        #
+        # self.classdict = {'normal': 0, 'luad': 1, 'lscc': 2} 
+        #self.classdict = {'normal': 0, 'tumor': 1} 
         #self.classdict = {'Normal': 0, 'TCGA-LUAD': 1, 'TCGA-LUSC': 2}
+        self.classdict = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5}   # ISUP grade mapping 
         self._up_kwargs = {'mode': 'bilinear'}
 
     def __getitem__(self, index):
         sample = {}
         info = self.ids[index].replace('\n', '')
-        file_name, label = info.split('\t')[0].rsplit('.', 1)[0], info.split('\t')[1]
-        site, file_name = file_name.split('/')
+        # file_name, label = info.split('\t')[0].rsplit('.', 1)[0], info.split('\t')[1]
+        file_name, label = info.split('\t')[0], info.split('\t')[1]
+        file_path = self.root + '/simclr_files' # self.root should be "graphs"
+        print(f"* dataset.py: {file_name} - {label}")
+        print(f"* dataset.py: {file_path}")
+
+        # site, file_name = file_name.split('/')
 
         # if site =='CCRCC':
         #     file_path = self.root + 'CPTAC_CCRCC_features/simclr_files'
-        if site =='LUAD' or site =='LSCC':
-            site = 'LUNG'
-        file_path = self.root + 'CPTAC_{}_features/simclr_files'.format(site)       #_pre# with # rushin
+        # if site =='LUAD' or site =='LSCC':
+        #     site = 'LUNG'
+        # file_path = self.root + 'CPTAC_{}_features/simclr_files'.format(site)       #_pre# with # rushin
 
-        # For NLST only
-        if site =='NLST':
-            file_path = self.root + 'NLST_Lung_features/simclr_files'
+        # # For NLST only
+        # if site =='NLST':
+        #     file_path = self.root + 'NLST_Lung_features/simclr_files'
 
-        # For TCGA only
-        if site =='TCGA':
-            file_name = info.split('\t')[0]
-            _, file_name = file_name.split('/')
-            file_path = self.root + 'TCGA_LUNG_features/simclr_files'       #_resnet_with
+        # # For TCGA only
+        # if site =='TCGA':
+        #     file_name = info.split('\t')[0]
+        #     _, file_name = file_name.split('/')
+        #     file_path = self.root + 'TCGA_LUNG_features/simclr_files'       #_resnet_with
 
         sample['label'] = self.classdict[label]
         sample['id'] = file_name
 
-        #feature_path = os.path.join(self.root, file_name, 'features.pt')
+        # feature_path = os.path.join(self.root, file_name, 'features.pt')
         feature_path = os.path.join(file_path, file_name, 'features.pt')
-
         if os.path.exists(feature_path):
             features = torch.load(feature_path, map_location=lambda storage, loc: storage)
         else:
-            print(feature_path + ' not exists')
+            (f"* dataset.py: {feature_path} not exists!!!")
             features = torch.zeros(1, 512)
 
-        #adj_s_path = os.path.join(self.root, file_name, 'adj_s.pt')
+        # adj_s_path = os.path.join(self.root, file_name, 'adj_s.pt')
         adj_s_path = os.path.join(file_path, file_name, 'adj_s.pt')
         if os.path.exists(adj_s_path):
             adj_s = torch.load(adj_s_path, map_location=lambda storage, loc: storage)
         else:
             print(adj_s_path + ' not exists')
+            (f"* dataset.py: {adj_s_path} not exists!!!")
             adj_s = torch.ones(features.shape[0], features.shape[0])
 
-        #features = features.unsqueeze(0)
+        # features = features.unsqueeze(0)
         sample['image'] = features
-        sample['adj_s'] = adj_s     #adj_s.to(torch.double)
+        sample['adj_s'] = adj_s     # adj_s.to(torch.double)
         # return {'image': image.astype(np.float32), 'label': label.astype(np.int64)}
 
         return sample
