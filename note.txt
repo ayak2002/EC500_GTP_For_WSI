@@ -1,5 +1,5 @@
 Hi! Below are my notes on changing the parameters of the whole model when building the workflow. 
-There is a run.py serving as an entry for each stage. Read the usages in each file and try to run the model on your end!
+There is a run.py serving as an entrance for each stage. Read the usages in each file and try to run the model on your end!
 Feel free to ask me anything! We do need your effort to build a satisfying model! 
 
 
