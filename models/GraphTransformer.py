@@ -15,6 +15,7 @@ from .gcn import GCNBlock
 
 from torch_geometric.nn import GCNConv, DenseGraphConv, dense_mincut_pool
 from torch.nn import Linear
+
 class Classifier(nn.Module):
     def __init__(self, n_class):
         super(Classifier, self).__init__()

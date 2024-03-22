@@ -4,6 +4,7 @@ Try to make a run.py as an entry for each stage.
 
 Set -M to 1
 
+
 * 2: Train a patch feature extractor
 
 Set batch_size to 32 in config.yaml
@@ -12,6 +13,7 @@ Set weight_decay to 10e-5
 Throw apex away in simclr.py since it is not used
 Discard the 20x magnification in run.py
     We haven't made use of magnification in stage 1, though I have no idea whether they are related. 
+
 
 * 3: Construct graphs
 
@@ -23,7 +25,18 @@ Set :arg num_classes to 512 to match the size from the checkpoint
     Honestly I don't know why they set it to 512 before.
 Add CPU ver in build_graphs.py by changing .cuda() and .load()
 
+
 * 4: Train and test the graph transformer
 
 Add ISUP grade mapping in utils/dataset.py
 Change both graphs and labels reading logic in utils/dataset.py
+Add a Python script to extract image IDs and labels into text files. 
+    train_set.txt and val_set.txt are saved under the graphs directory. 
+Change the arguments in 4_train.sh accordingly:
+    - n_class 6
+    - data_path "./graphs"
+    - train_set "./graphs/train_set.txt" \
+    - val_set "./graphs/val_set.txt"
+    - task_name "GTP"
+    - batch_size 2
+    Other hyperparameters (e.g., num_epochs and lr) can also be modified in option.py. 

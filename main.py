@@ -44,7 +44,7 @@ if train:
     dataset_train = GraphDataset(os.path.join(data_path, ""), ids_train)
     dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=True, pin_memory=True, drop_last=True)
     total_train_num = len(dataloader_train) * batch_size
-    print(f"* 4_main.py: total_train_num is {total_train_num}")
+    print(f"* main.py: total_train_num is {total_train_num}")
 
 ids_val = open(args.val_set).readlines()
 dataset_val = GraphDataset(os.path.join(data_path, ""), ids_val)
@@ -66,17 +66,18 @@ if args.resume:
 
 if torch.cuda.is_available():
     model = model.cuda()
-#model.apply(weight_init)
+# model.apply(weight_init)
 
-optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate, weight_decay = 5e-4)       # best:5e-4, 4e-3
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=5e-4)   # their best: 5e-4, 4e-3
 scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20,100], gamma=0.1) # gamma=0.3  # 30,90,130 # 20,90,130 -> 150
 
 ##################################
 
+# TODO: replace it with our own loss function
 criterion = nn.CrossEntropyLoss()
 
 if not test:
-    writer = SummaryWriter(log_dir=log_path + task_name)
+    writer = SummaryWriter(log_dir = log_path + task_name)
     f_log = open(log_path + task_name + ".log", 'w')
 
 trainer = Trainer(n_class)
@@ -94,7 +95,7 @@ for epoch in range(num_epochs):
 
     if train:
         for i_batch, sample_batched in enumerate(dataloader_train):
-            #scheduler(optimizer, i_batch, epoch, best_pred)
+            # scheduler(optimizer, i_batch, epoch, best_pred)
             scheduler.step(epoch)
 
             preds,labels,loss = trainer.train(sample_batched, model)
