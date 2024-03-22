@@ -18,8 +18,11 @@ from models.weight_init import weight_init
 args = Options().parse()
 n_class = args.n_class
 
-torch.cuda.synchronize()
-torch.backends.cudnn.deterministic = True
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+if device == 'cuda':
+    torch.cuda.synchronize()
+    torch.backends.cudnn.deterministic = True
 
 data_path = args.data_path
 model_path = args.model_path
@@ -41,17 +44,19 @@ batch_size = args.batch_size
 
 if train:
     ids_train = open(args.train_set).readlines()
+    # print(f"* main.py: len(ids_train) is {len(ids_train)}")
     dataset_train = GraphDataset(os.path.join(data_path, ""), ids_train)
-    dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=True, pin_memory=True, drop_last=True)
+    dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=0, collate_fn=collate, shuffle=True, pin_memory=True, drop_last=True)
+    # dataloader_train = torch.utils.data.DataLoader(dataset=dataset_train, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=True, pin_memory=True, drop_last=True)
     total_train_num = len(dataloader_train) * batch_size
     print(f"* main.py: total_train_num is {total_train_num}")
 
 ids_val = open(args.val_set).readlines()
 dataset_val = GraphDataset(os.path.join(data_path, ""), ids_val)
-dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=False, pin_memory=True)
+# dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=batch_size, num_workers=10, collate_fn=collate, shuffle=False, pin_memory=True)
+dataloader_val = torch.utils.data.DataLoader(dataset=dataset_val, batch_size=batch_size, num_workers=0, collate_fn=collate, shuffle=False, pin_memory=True)
 total_val_num = len(dataloader_val) * batch_size
-    
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 ##### Creating models
 print("creating models......")
 
@@ -83,6 +88,7 @@ if not test:
 trainer = Trainer(n_class)
 evaluator = Evaluator(n_class)
 
+# best_pred = -0.1
 best_pred = 0.0
 for epoch in range(num_epochs):
     # optimizer.zero_grad()

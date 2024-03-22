@@ -47,10 +47,15 @@ def preparefeatureLabel(batch_graph, batch_label, batch_adjs):
         #masks
         masks[i,0:cur_node_num] = 1  
 
-    node_feat = batch_node_feat.cuda()
-    labels = labels.cuda()
-    adjs = adjs.cuda()
-    masks = masks.cuda()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    node_feat = batch_node_feat.to(device)
+    labels = labels.to(device)
+    adjs = adjs.to(device)
+    masks = masks.to(device)
+    # node_feat = batch_node_feat.cuda()
+    # labels = labels.cuda()
+    # adjs = adjs.cuda()
+    # masks = masks.cuda()
 
     return node_feat, labels, adjs, masks
 

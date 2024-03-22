@@ -1,4 +1,7 @@
-Try to make a run.py as an entry for each stage. 
+Hi! Below are my notes on changing the parameters of the whole model when building the workflow. 
+There is a run.py serving as an entry for each stage. Read the usages in each file and try to run the model on your end!
+Feel free to ask me anything! We do need your effort to build a satisfying model! 
+
 
 * 1: Tile WSIs
 
@@ -40,3 +43,7 @@ Change the arguments in 4_train.sh accordingly:
     - task_name "GTP"
     - batch_size 2
     Other hyperparameters (e.g., num_epochs and lr) can also be modified in option.py. 
+Change the arguments in 4_test.sh in the same way above
+Add CPU ver in main.py, gcn.py and helper.py
+Change num_workers to 0 in data loaders at Lines 49 & 56 in main.py
+    This is a naive solution to solve a runtime error on my Macbook, but I do hope we can make multi-processing procedures work on SCC.  

@@ -351,13 +351,16 @@ class GCNBlock(nn.Module):
         if self.bn:
             self.bn_layer = torch.nn.BatchNorm1d(output_dim)
 
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
         self.normalize_embedding = normalize_embedding
         self.input_dim = input_dim
         self.output_dim = output_dim
-        self.weight = nn.Parameter(torch.FloatTensor(input_dim, output_dim).cuda())
+        self.weight = nn.Parameter(torch.FloatTensor(input_dim, output_dim).to(device))
+        # self.weight = nn.Parameter(torch.FloatTensor(input_dim, output_dim).cuda())
         torch.nn.init.xavier_normal_(self.weight)
         if bias:
-            self.bias = nn.Parameter(torch.zeros(output_dim).cuda())
+            self.bias = nn.Parameter(torch.zeros(output_dim).to(device))
+            # self.bias = nn.Parameter(torch.zeros(output_dim).cuda())
         else:
             self.bias = None
 

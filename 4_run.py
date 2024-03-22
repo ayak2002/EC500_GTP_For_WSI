@@ -2,11 +2,15 @@
     Usage:
         This is a script that splits the training, validation and testing set, 
         and the proportion is 7:1:2. Run this script before running 4_train.sh 
-        and 4_test.sh. 
+        and 4_test.sh using the following command:
+            bash 4_train.sh
+            bash 4_test.sh
 
         Also you can run the training and testing scripts here by commenting 
-        prepare_input_for_transformer and uncommenting the sub-processes. BUT 
-        remember to SET UP the hyperparameters first! These are mainly in 4_{train, test}.sh 
+        prepare_input_for_transformer and uncommenting the sub-processes. You might 
+        need to set up right permissions first by
+            chmod +x 4_{train, test}.sh
+        Remember to SET UP the hyperparameters first! These are mainly in 4_{train, test}.sh 
         and option.py. 
 
     Input: 
@@ -56,7 +60,7 @@ def prepare_input_for_transformer(label_path, graph_path):
 if __name__ == '__main__':
     label_path = "minisample/train.csv"
     graph_path = "graphs/simclr_files"
-    prepare_input_for_transformer(label_path, graph_path)
+    # prepare_input_for_transformer(label_path, graph_path)
 
     # train_script_path = './4_train.sh'
     # result = subprocess.run([train_script_path], capture_output=True, text=True, shell=True)
